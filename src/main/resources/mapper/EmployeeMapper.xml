@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.linyh.mapper.EmployeeMapper">
+
+    <resultMap id="BaseResultMap" type="xyz.linyh.entity.Employee">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="VARCHAR"/>
+            <result property="idNumber" column="id_number" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+            <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,username,
+        password,phone,sex,
+        id_number,status,create_time,
+        update_time,create_user,update_user,is_delete
+    </sql>
+
+    <insert id="saveEmployee">
+        insert into employee ( name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user )
+        values (  #{employee.name}, #{employee.username}, #{employee.password}, #{employee.phone}, #{employee.sex}, #{employee.idNumber}, #{employee.createTime}, #{employee.updateTime}, #{employee.createUser}, #{employee.updateUser} )
+    </insert>
+
+    <update id="updateEmployee">
+        update employee
+        set name=#{employee.name}, username=#{employee.username}, password=#{employee.password}, phone=#{employee.phone}, sex=#{employee.sex}, id_number=#{employee.idNumber}, status=#{employee.status},update_time=#{employee.updateTime},update_user=#{employee.updateUser}
+        where id=#{employee.id} and is_deleted=0
+    </update>
+
+    <update id="updateEmployeeStatus">
+        update employee
+        set status=#{employee.status},update_time=#{employee.updateTime},update_user=#{employee.updateUser}
+        where id=#{employee.id} and is_deleted=0
+    </update>
+
+    <select id="getEmployee" resultType="xyz.linyh.entity.Employee">
+        select id,name,username,password,phone,sex,id_number,status,create_time,update_time,create_user,update_user,is_deleted
+        from employee
+        where is_deleted=0 and (username = #{userName})
+    </select>
+
+    <select id="getEmployeeCount" resultType="java.lang.Integer">
+        select count(*)
+        from employee
+        where
+        is_deleted = 0
+        <if test="name != null">
+            and name LIKE concat('%', #{name}, '%')
+        </if>
+    </select>
+
+    <select id="getAllEmployeeByPage" resultType="xyz.linyh.entity.Employee">
+        select id,name,username,password,phone,sex,id_number,status,create_time,update_time,create_user,update_user,is_deleted
+        from employee
+        where is_deleted = 0
+        <if test="name != null">
+            and name LIKE concat('%', #{name}, '%')
+        </if>
+            LIMIT #{offset},#{pageSize}
+    </select>
+</mapper>

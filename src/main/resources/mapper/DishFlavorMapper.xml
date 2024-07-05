@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.linyh.mapper.DishFlavorMapper">
+
+    <resultMap id="BaseResultMap" type="xyz.linyh.entity.DishFlavor">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="dishId" column="dish_id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="value" column="value" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+            <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,dish_id,name,
+        value,create_time,update_time,
+        create_user,update_user,is_deleted
+    </sql>
+
+    <insert id="saveDishFlavor">
+       insert into dish_flavor (dish_id, name, value, create_time, update_time, create_user, update_user )
+       values (#{flavor.dishId}, #{flavor.name}, #{flavor.value}, #{flavor.updateTime}, #{flavor.updateTime}, #{flavor.createUser}, #{flavor.updateUser} )
+    </insert>
+
+    <update id="updateDishFlavor">
+        update dish_flavor
+        set dish_id=#{flavor.dishId}, name=#{flavor.name}, value=#{flavor.value}, create_time=#{flavor.createTime}, update_time=#{flavor.updateTime}, create_user=#{flavor.createUser}, update_user=#{flavor.updateUser}, is_deleted=#{flavor.isDeleted}
+        where id=#{flavor.id}
+    </update>
+
+    <update id="deleteDishFlavorById">
+        update dish_flavor
+        set is_deleted=1
+        where id=#{id} and is_deleted=0
+    </update>
+
+    <select id="getDishFlavorByDishId" resultType="xyz.linyh.entity.DishFlavor">
+        SELECT id,dish_id,name,value,create_time,update_time,create_user,update_user,is_deleted
+        FROM dish_flavor
+        WHERE dish_id= #{dishId} and is_deleted = 0
+    </select>
+</mapper>
